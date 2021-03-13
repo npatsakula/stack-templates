@@ -18,11 +18,11 @@ extra-source-files:
 - stack.yaml
 
 ghc-options: -Wall
-resolver: lts-17.3
 
 library:
   dependencies:
   - base
+  - relude
   source-dirs: library
 
 executables:
@@ -31,6 +31,7 @@ executables:
     main: Main.hs
     dependencies:
     - base
+    - relude
     - {{ name }}
     ghc-options:
     - -O2
@@ -44,6 +45,7 @@ benchmarks:
     main: Main.hs
     dependencies:
     - base
+    - relude
     - {{ name }}
     - criterion
     ghc-options:
@@ -59,6 +61,7 @@ tests:
     dependencies:
     - base
     - {{ name }}
+    - relude
     - tasty
     - tasty-hspec
     ghc-options:
@@ -116,27 +119,40 @@ stack haddock
 ```
 
 {-# START_FILE benchmark/Main.hs #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+
 import Criterion.Main
+import Relude
 
 main :: IO ()
 main = defaultMain [bench "const" (whnf const ())]
 
 {-# START_FILE executable/Main.hs #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+
 import qualified Example
+import Relude
 
 main :: IO ()
 main = Example.main
 
 {-# START_FILE library/Example.hs #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+
 module Example (main) where
+
+import Relude
 
 main :: IO ()
 main = return ()
 
 {-# START_FILE test-suite/Main.hs #-}
-import qualified Test.Tasty
+{-# LANGUAGE NoImplicitPrelude #-}
 
+import qualified Test.Tasty
 import Test.Tasty.Hspec
+
+import Relude
 
 main :: IO ()
 main = do
